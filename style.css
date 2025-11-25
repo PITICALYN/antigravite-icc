@@ -1,0 +1,322 @@
+:root {
+    --primary-color: #4da1ff;
+    /* Lighter Blue (Sky Blue) */
+    --primary-dark: #2a80d8;
+    /* Slightly darker for hover */
+    --secondary-color: #00a651;
+    /* Green for buttons */
+    --text-color: #333;
+    --light-bg: #f8f9fa;
+    --white: #ffffff;
+    --border-color: #e0e0e0;
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+.main-header {
+    background-color: var(--white);
+    /* White header for cleaner look */
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    max-height: 70px;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    color: var(--primary-color);
+    /* Icons now match brand */
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.social-icons a:hover {
+    color: var(--primary-dark);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 60px 0;
+    display: flex;
+    align-items: center;
+}
+
+.split-layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px;
+    align-items: flex-start;
+}
+
+/* Info Section */
+.info-section {
+    flex: 1;
+    min-width: 300px;
+    padding-right: 20px;
+}
+
+.info-section h1 {
+    font-size: 2.8rem;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.info-section h2 {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.info-section p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: #555;
+    text-align: justify;
+}
+
+/* Form Section */
+.form-section {
+    flex: 1.2;
+    /* Give form slightly more space */
+    min-width: 320px;
+}
+
+.form-container {
+    background-color: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    border-top: 5px solid var(--primary-color);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="date"],
+.form-group input[type="url"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background-color: #fafafa;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(77, 161, 255, 0.2);
+    background-color: #fff;
+}
+
+.form-group input[readonly] {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 20px;
+}
+
+.checkbox-group input {
+    margin-top: 3px;
+}
+
+.checkbox-group a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.input-group,
+.input-group-prefix {
+    margin-bottom: 15px;
+}
+
+.prefix-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #fafafa;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.prefix-wrapper:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(77, 161, 255, 0.2);
+    background-color: #fff;
+}
+
+.prefix {
+    background-color: #e9ecef;
+    padding: 12px 15px;
+    color: #555;
+    font-size: 0.95rem;
+    border-right: 1px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.prefix-wrapper input {
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+    flex: 1;
+    padding: 12px 15px;
+    background-color: transparent;
+}
+
+.prefix-wrapper input:focus {
+    outline: none;
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.3s, transform 0.1s;
+    margin-top: 20px;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    /* Match brand color */
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(77, 161, 255, 0.4);
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color);
+    color: var(--white);
+}
+
+.form-group h3 {
+    gap: 8px;
+}
+
+.checkbox-list label,
+.radio-group label {
+    font-weight: normal;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.hidden {
+    display: none;
+}
+
+.consent-link a {
+    color: #888;
+    text-decoration: none;
+}
+
+/* Footer */
+.main-footer {
+    background-color: #f0f0f0;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: auto;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .split-layout {
+        flex-direction: column;
+    }
+
+    .info-section {
+        padding-right: 0;
+        text-align: center;
+    }
+}
