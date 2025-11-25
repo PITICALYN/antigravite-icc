@@ -98,117 +98,106 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.innerText = 'ENVIANDO...';
         submitBtn.disabled = true;
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+        // Create a hidden iframe to be the target of the form submission
+        let iframe = document.getElementById('hidden_iframe');
+        if (!iframe) {
+            iframe = document.createElement('iframe');
+            iframe.name = 'hidden_iframe';
+            iframe.id = 'hidden_iframe';
+            iframe.style.display = 'none'; // Hidden iframe
+            document.body.appendChild(iframe);
+        }
 
-            const submitBtn = form.querySelector('.btn-primary');
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = 'ENVIANDO...';
-            submitBtn.disabled = true;
+        // Create a temporary form to submit to the iframe
+        const tempForm = document.createElement('form');
+        tempForm.action = GOOGLE_FORM_URL;
+        tempForm.method = 'POST';
+        tempForm.target = 'hidden_iframe';
+        tempForm.style.display = 'none';
 
-            // Create a hidden iframe to be the target of the form submission
-            let iframe = document.getElementById('hidden_iframe');
-            if (!iframe) {
-                iframe = document.createElement('iframe');
-                iframe.name = 'hidden_iframe';
-                iframe.id = 'hidden_iframe';
-                iframe.style.display = 'none'; // Re-hide iframe
-                document.body.appendChild(iframe);
-            }
+        const formData = new FormData(form);
 
-            // Create a temporary form to submit to the iframe
-            const tempForm = document.createElement('form');
-            tempForm.action = GOOGLE_FORM_URL;
-            tempForm.method = 'POST';
-            tempForm.target = 'hidden_iframe';
-            tempForm.style.display = 'none';
+        // Value Mapping for Google Forms (Internal Value -> Google Form Exact Text)
+        const valueMap = {
+            // Cultural Areas
+            'bate_bola': 'Bate-Bola',
+            'grafite': 'Grafite',
+            'capoeira': 'Capoeira',
+            'musica': 'Música',
+            'danca': 'Dança',
+            'maquiagem': 'Maquiagem Artística',
+            'producao': 'Produção Cultural',
+            'fotografia': 'Fotografia',
+            'audiovisual': 'Audiovisual',
+            'outros': 'Outros',
+            // Radios
+            'sim': 'Sim',
+            'nao': 'Não',
+            // Privacy Policy
+            'on': 'Li e concordo com a Política de Privacidade'
+        };
 
-            const formData = new FormData(form);
-
-            // Value Mapping for Google Forms (Internal Value -> Google Form Exact Text)
-            const valueMap = {
-                // Cultural Areas
-                'bate_bola': 'Bate-Bola',
-                'grafite': 'Grafite',
-                'capoeira': 'Capoeira',
-                'musica': 'Música',
-                'danca': 'Dança',
-                'maquiagem': 'Maquiagem Artística',
-                'producao': 'Produção Cultural',
-                'fotografia': 'Fotografia',
-                'audiovisual': 'Audiovisual',
-                'outros': 'Outros',
-                // Radios
-                'sim': 'Sim',
-                'nao': 'Não',
-                // Privacy Policy
-                'on': 'Li e concordo com a Política de Privacidade' // Checkbox default value is 'on'
-            };
-
-            // Populate the temp form with mapped data
-            for (const [htmlName, googleEntryId] of Object.entries(fieldMapping)) {
-                if (htmlName === 'cultural_area') {
-                    // Handle multi-checkboxes
-                    const values = formData.getAll(htmlName);
-                    values.forEach(val => {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = googleEntryId;
-                        // Map value if exists, otherwise use original
-                        input.value = valueMap[val] || val;
-                        tempForm.appendChild(input);
-                    });
-                } else if (htmlName === 'facebook_user' || htmlName === 'instagram_user') {
-                    // Handle prefixes
-                    const val = formData.get(htmlName);
-                    if (val) {
-                        const prefix = htmlName === 'facebook_user' ? 'facebook.com/' : 'instagram.com/';
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = googleEntryId;
-                        input.value = prefix + val;
-                        tempForm.appendChild(input);
-                    }
-                } else if (htmlName === 'privacy_policy') {
-                    // Handle privacy policy specific text
-                    const val = formData.get(htmlName);
-                    if (val) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = googleEntryId;
-                        input.value = 'Li e concordo com a Política de Privacidade';
-                        tempForm.appendChild(input);
-                    }
-                } else {
-                    // Standard fields
-                    const val = formData.get(htmlName);
-                    if (val) {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = googleEntryId;
-                        // Map value if exists (for radios like Sim/Não), otherwise use original
-                        input.value = valueMap[val] || val;
-                        tempForm.appendChild(input);
-                    }
+        // Populate the temp form with mapped data
+        for (const [htmlName, googleEntryId] of Object.entries(fieldMapping)) {
+            if (htmlName === 'cultural_area') {
+                // Handle multi-checkboxes
+                const values = formData.getAll(htmlName);
+                values.forEach(val => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = googleEntryId;
+                    input.value = valueMap[val] || val;
+                    tempForm.appendChild(input);
+                });
+            } else if (htmlName === 'facebook_user' || htmlName === 'instagram_user') {
+                // Handle prefixes
+                const val = formData.get(htmlName);
+                if (val) {
+                    const prefix = htmlName === 'facebook_user' ? 'facebook.com/' : 'instagram.com/';
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = googleEntryId;
+                    input.value = prefix + val;
+                    tempForm.appendChild(input);
+                }
+            } else if (htmlName === 'privacy_policy') {
+                // Handle privacy policy specific text
+                const val = formData.get(htmlName);
+                if (val) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = googleEntryId;
+                    input.value = 'Li e concordo com a Política de Privacidade';
+                    tempForm.appendChild(input);
+                }
+            } else {
+                // Standard fields
+                const val = formData.get(htmlName);
+                if (val) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = googleEntryId;
+                    input.value = valueMap[val] || val;
+                    tempForm.appendChild(input);
                 }
             }
+        }
 
-            document.body.appendChild(tempForm);
-            tempForm.submit();
+        document.body.appendChild(tempForm);
+        tempForm.submit();
 
-            // Since we can't reliably detect load on cross-origin iframe, we assume success after a delay
-            setTimeout(() => {
-                alert('Cadastro realizado com sucesso!');
-                form.reset();
+        // Since we can't reliably detect load on cross-origin iframe, we assume success after a delay
+        setTimeout(() => {
+            alert('Cadastro realizado com sucesso!');
+            form.reset();
 
-                // Reset conditionals
-                document.querySelectorAll('.hidden').forEach(el => el.classList.add('hidden'));
+            // Reset conditionals
+            document.querySelectorAll('.hidden').forEach(el => el.classList.add('hidden'));
 
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
+            submitBtn.innerText = originalText;
+            submitBtn.disabled = false;
 
-                // Cleanup
-                document.body.removeChild(tempForm);
-            }, 2000);
-        });
+            // Cleanup
+            document.body.removeChild(tempForm);
+        }, 2000);
     });
