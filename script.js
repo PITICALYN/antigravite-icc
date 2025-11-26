@@ -82,11 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
         'portfolio_site': 'entry.1502285931',
         'facebook_user': 'entry.1364402133',
         // 'instagram_user': 'entry.MISSING', // Not in provided link
-        'collective_participation': 'entry.1110992509',
+        'collective_participation': 'entry.1150245970', // Corrected ID
         // 'collective_name': 'entry.MISSING', // Still missing from link, keeping generic or ignoring
-        'image_auth': 'entry.30914039',
-        'participation_auth': 'entry.1150245970', // Found in new link
-        'comm_auth': 'entry.858060365', // Found in new link
+        'image_auth': 'entry.858060365', // Corrected ID
+        'participation_auth': 'entry.1110992509', // Corrected ID
+        'comm_auth': 'entry.30914039', // Corrected ID
         'privacy_policy': 'entry.1778170175'
     };
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'musica': 'Música',
             'danca': 'Dança',
             'maquiagem': 'Maquiagem Artística',
-            'producao': 'Produção Cultural',
+            'producao': 'Produçao Cultural', // Note: 'Produçao' without tilde in Google Form
             'fotografia': 'Fotografia',
             'audiovisual': 'Audiovisual',
             'outros': 'Outros',
@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'sim': 'Sim',
             'nao': 'Não',
             // Privacy Policy
-            'on': 'Li e concordo com a Política de Privacidade'
+            'on': 'Li e concordo com a Politica de Privacidade' // Note: 'Politica' without accent in Google Form
         };
 
         // Populate the temp form with mapped data
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const input = document.createElement('input');
                     input.type = 'hidden';
                     input.name = googleEntryId;
-                    input.value = 'Li e concordo com a Política de Privacidade';
+                    input.value = 'Li e concordo com a Politica de Privacidade'; // No accent
                     tempForm.appendChild(input);
                 }
             } else {
@@ -201,3 +201,4 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.removeChild(tempForm);
         }, 2000);
     });
+});
