@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tempForm.action = GOOGLE_FORM_URL;
         tempForm.method = 'POST';
         tempForm.target = 'hidden_iframe';
+        tempForm.acceptCharset = 'UTF-8';
         tempForm.style.display = 'none';
 
         const formData = new FormData(form);
@@ -168,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (const [htmlName, googleEntryId] of Object.entries(fieldMapping)) {
             let val = formData.get(htmlName);
 
-            if (!val) continue; // Skip empty fields
+            if (val === null) continue; // Skip only if field is missing entirely
 
             if (htmlName === 'cultural_area') {
                 // Handle multi-checkboxes
