@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Field Mapping (HTML Name -> Google Entry ID)
     const fieldMapping = {
         'name': 'entry.548524210',
-        'use_social_name': 'entry.1491378407', // Checkbox
+        'use_social_name': 'entry.1491378407', // Checkbox - Expects "sim"
         'social_name': 'entry.1494130951',
         'email': 'entry.477940854',
         'phone': 'entry.1924454278',
@@ -74,19 +74,19 @@ document.addEventListener('DOMContentLoaded', () => {
         'gender': 'entry.466314194',
         'gender_other': 'entry.128321115',
         'race': 'entry.775361342',
-        // 'race_other': 'entry.MISSING', // Not in provided link, might need update if user adds it
+        // 'race_other': 'entry.MISSING', // Handled via logic
         'cultural_area': 'entry.1352902010', // Checkboxes
         'cultural_other': 'entry.126170279',
         'experience_time': 'entry.276516650',
         'work_description': 'entry.1635954645',
         'portfolio_site': 'entry.1502285931',
         'facebook_user': 'entry.1364402133',
-        // 'instagram_user': 'entry.MISSING', // Not in provided link
-        'collective_participation': 'entry.1150245970', // Corrected ID
-        // 'collective_name': 'entry.MISSING', // Still missing from link, keeping generic or ignoring
-        'image_auth': 'entry.858060365', // Corrected ID
-        'participation_auth': 'entry.1110992509', // Corrected ID
-        'comm_auth': 'entry.30914039', // Corrected ID
+        // 'instagram_user': 'entry.MISSING', // Not in form
+        'collective_participation': 'entry.1150245970',
+        'collective_name': 'entry.554285331', // Added ID
+        'image_auth': 'entry.858060365',
+        'participation_auth': 'entry.1110992509',
+        'comm_auth': 'entry.30914039',
         'privacy_policy': 'entry.1778170175'
     };
 
@@ -104,7 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
             iframe = document.createElement('iframe');
             iframe.name = 'hidden_iframe';
             iframe.id = 'hidden_iframe';
-            iframe.style.display = 'none'; // Hidden iframe
+            iframe.name = 'hidden_iframe';
+            iframe.id = 'hidden_iframe';
+            // DEBUG: Make iframe visible to see errors
+            iframe.style.display = 'block';
+            iframe.style.width = '100%';
+            iframe.style.height = '500px';
+            iframe.style.border = '2px solid red';
             document.body.appendChild(iframe);
         }
 
@@ -126,62 +132,146 @@ document.addEventListener('DOMContentLoaded', () => {
             'musica': 'Música',
             'danca': 'Dança',
             'maquiagem': 'Maquiagem Artística',
-            'producao': 'Produçao Cultural', // Note: 'Produçao' without tilde in Google Form
+            'producao': 'Produção Cultural',
             'fotografia': 'Fotografia',
             'audiovisual': 'Audiovisual',
             'outros': 'Outros',
-            // Radios
+            // Radios & Checkboxes
             'sim': 'Sim',
             'nao': 'Não',
-            // Privacy Policy
-            'on': 'Li e concordo com a Politica de Privacidade' // Note: 'Politica' without accent in Google Form
+            'on': 'Sim', // Default 'on' for checkbox -> 'Sim' (Uppercase) for Social Name
+            // Education
+            'fundamental': 'Fundamental',
+            'medio': 'Médio',
+            'tecnico': 'Médio Técnico',
+            'superior_incompleto': 'Superior',
+            'superior_completo': 'Superior',
+            'pos_graduacao': 'Pós - Graduação',
+            // Gender
+            'feminino': 'Mulher',
+            'masculino': 'Homem',
+            'nao_binario': 'Não- Binário', // Space intentional
+            'transgenero': 'Travesti', // Closest match in form
+            'outro': 'Outro',
+            'prefiro_nao_dizer': 'Prefiro não responder',
+            // Race
+            'branca': 'Branca',
+            'preta': 'Preta',
+            'parda': 'Parda',
+            'amarela': 'Amarela',
+            'indigena': 'Indígena',
+            // 'outra': Handled separately
         };
 
         // Populate the temp form with mapped data
+        console.log('--- Form Submission Data ---');
         for (const [htmlName, googleEntryId] of Object.entries(fieldMapping)) {
+            let val = formData.get(htmlName);
+
+            if (!val) continue; // Skip empty fields
+
             if (htmlName === 'cultural_area') {
                 // Handle multi-checkboxes
                 const values = formData.getAll(htmlName);
-                values.forEach(val => {
+                values.forEach(v => {
+                    const mappedVal = valueMap[v] || v;
+                    console.log(`${htmlName} [${googleEntryId}]: ${mappedVal}`);
                     const input = document.createElement('input');
                     input.type = 'hidden';
                     input.name = googleEntryId;
-                    input.value = valueMap[val] || val;
+                    input.value = mappedVal;
                     tempForm.appendChild(input);
                 });
-            } else if (htmlName === 'facebook_user' || htmlName === 'instagram_user') {
-                // Handle prefixes
-                const val = formData.get(htmlName);
-                if (val) {
-                    const prefix = htmlName === 'facebook_user' ? 'facebook.com/' : 'instagram.com/';
+            }
+            else if (htmlName === 'race') {
+                // Special handling for Race "Outra"
+                if (val === 'outra') {
+                    const otherVal = formData.get('race_other');
+                    if (otherVal) {
+                        console.log(`${htmlName} (Other) [${googleEntryId}]: ${otherVal}`);
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = googleEntryId;
+                        input.value = otherVal; // Send the text directly to the radio ID
+                        tempForm.appendChild(input);
+                    }
+                } else {
+                    const mappedVal = valueMap[val] || val;
+                    console.log(`${htmlName} [${googleEntryId}]: ${mappedVal}`);
                     const input = document.createElement('input');
                     input.type = 'hidden';
                     input.name = googleEntryId;
-                    input.value = prefix + val;
-                    tempForm.appendChild(input);
-                }
-            } else if (htmlName === 'privacy_policy') {
-                // Handle privacy policy specific text
-                const val = formData.get(htmlName);
-                if (val) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = googleEntryId;
-                    input.value = 'Li e concordo com a Politica de Privacidade'; // No accent
-                    tempForm.appendChild(input);
-                }
-            } else {
-                // Standard fields
-                const val = formData.get(htmlName);
-                if (val) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = googleEntryId;
-                    input.value = valueMap[val] || val;
+                    input.value = mappedVal;
                     tempForm.appendChild(input);
                 }
             }
+            else if (htmlName === 'use_social_name') {
+                // Checkbox expects "Sim"
+                console.log(`${htmlName} [${googleEntryId}]: Sim`);
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = googleEntryId;
+                input.value = 'Sim';
+                tempForm.appendChild(input);
+            }
+            else if (htmlName === 'facebook_user') {
+                const prefix = 'facebook.com/';
+                console.log(`${htmlName} [${googleEntryId}]: ${prefix + val}`);
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = googleEntryId;
+                input.value = prefix + val;
+                tempForm.appendChild(input);
+            }
+            else if (htmlName === 'instagram_user') {
+                const prefix = 'instagram.com/';
+                console.log(`${htmlName} [${googleEntryId}]: ${prefix + val}`);
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = googleEntryId;
+                input.value = prefix + val;
+                tempForm.appendChild(input);
+            }
+            else if (htmlName === 'privacy_policy') {
+                const policyVal = 'Li e concordo com a Política de Privacidade';
+                console.log(`${htmlName} [${googleEntryId}]: ${policyVal}`);
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = googleEntryId;
+                input.value = policyVal;
+                tempForm.appendChild(input);
+            }
+            else {
+                // Standard fields
+                const mappedVal = valueMap[val] || val;
+                console.log(`${htmlName} [${googleEntryId}]: ${mappedVal}`);
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = googleEntryId;
+                input.value = mappedVal;
+                tempForm.appendChild(input);
+            }
         }
+        console.log('----------------------------');
+
+        // Add required hidden fields for Google Forms validation
+        const hiddenFields = {
+            'fvv': '1',
+            'fbzx': '6653372783592602984',
+            'pageHistory': '0'
+        };
+
+        for (const [name, value] of Object.entries(hiddenFields)) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = value;
+            tempForm.appendChild(input);
+        }
+
+        console.log('--- Hidden Fields Added ---');
+        console.log(hiddenFields);
+        console.log('----------------------------');
 
         document.body.appendChild(tempForm);
         tempForm.submit();
