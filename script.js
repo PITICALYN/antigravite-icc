@@ -119,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tempForm.action = GOOGLE_FORM_URL;
         tempForm.method = 'POST';
         tempForm.target = 'hidden_iframe';
-        tempForm.acceptCharset = 'UTF-8';
         tempForm.style.display = 'none';
 
         const formData = new FormData(form);
@@ -130,37 +129,37 @@ document.addEventListener('DOMContentLoaded', () => {
             'bate_bola': 'Bate-Bola',
             'grafite': 'Grafite',
             'capoeira': 'Capoeira',
-            'musica': 'Música',
-            'danca': 'Dança',
-            'maquiagem': 'Maquiagem Artística',
-            'producao': 'Produção Cultural',
+            'musica': 'M\u00FAsica', // Música
+            'danca': 'Dan\u00E7a', // Dança
+            'maquiagem': 'Maquiagem Art\u00EDstica', // Maquiagem Artística
+            'producao': 'Produ\u00E7\u00E3o Cultural', // Produção Cultural
             'fotografia': 'Fotografia',
             'audiovisual': 'Audiovisual',
             'outros': 'Outros',
             // Radios & Checkboxes
             'sim': 'Sim',
-            'nao': 'Não',
+            'nao': 'N\u00E3o', // Não
             'on': 'Sim', // Default 'on' for checkbox -> 'Sim' (Uppercase) for Social Name
             // Education
             'fundamental': 'Fundamental',
-            'medio': 'Médio',
-            'tecnico': 'Médio Técnico',
+            'medio': 'M\u00E9dio', // Médio
+            'tecnico': 'M\u00E9dio T\u00E9cnico', // Médio Técnico
             'superior_incompleto': 'Superior',
             'superior_completo': 'Superior',
-            'pos_graduacao': 'Pós - Graduação',
+            'pos_graduacao': 'P\u00F3s - Gradua\u00E7\u00E3o', // Pós - Graduação
             // Gender
             'feminino': 'Mulher',
             'masculino': 'Homem',
-            'nao_binario': 'Não- Binário', // Space intentional
+            'nao_binario': 'N\u00E3o- Bin\u00E1rio', // Não- Binário
             'transgenero': 'Travesti', // Closest match in form
             'outro': 'Outro',
-            'prefiro_nao_dizer': 'Prefiro não responder',
+            'prefiro_nao_dizer': 'Prefiro n\u00E3o responder', // Prefiro não responder
             // Race
             'branca': 'Branca',
             'preta': 'Preta',
             'parda': 'Parda',
             'amarela': 'Amarela',
-            'indigena': 'Indígena',
+            'indigena': 'Ind\u00EDgena', // Indígena
             // 'outra': Handled separately
         };
 
@@ -234,7 +233,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 tempForm.appendChild(input);
             }
             else if (htmlName === 'privacy_policy') {
-                const policyVal = 'Li e concordo com a Política de Privacidade';
+                // "Li e concordo com a Política de Privacidade"
+                const policyVal = 'Li e concordo com a Pol\u00EDtica de Privacidade';
                 console.log(`${htmlName} [${googleEntryId}]: ${policyVal}`);
                 const input = document.createElement('input');
                 input.type = 'hidden';
