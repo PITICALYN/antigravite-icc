@@ -254,6 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         console.log('----------------------------');
 
+        console.log('----------------------------');
+
         // Add required hidden fields for Google Forms validation
         const hiddenFields = {
             'fvv': '1',
@@ -269,8 +271,28 @@ document.addEventListener('DOMContentLoaded', () => {
             tempForm.appendChild(input);
         }
 
+        // Add sentinel fields for checkboxes/radios (Required for validation)
+        const sentinels = [
+            'entry.1491378407_sentinel', // Social Name
+            'entry.1352902010_sentinel', // Cultural Areas
+            'entry.1150245970_sentinel', // Collective Participation
+            'entry.858060365_sentinel',  // Image Auth
+            'entry.1110992509_sentinel', // Participation Auth
+            'entry.30914039_sentinel',   // Comm Auth
+            'entry.1778170175_sentinel'  // Privacy Policy
+        ];
+
+        sentinels.forEach(name => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.value = ''; // Sentinels are empty
+            tempForm.appendChild(input);
+        });
+
         console.log('--- Hidden Fields Added ---');
         console.log(hiddenFields);
+        console.log('Sentinels Added:', sentinels);
         console.log('----------------------------');
 
         document.body.appendChild(tempForm);
@@ -278,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Since we can't reliably detect load on cross-origin iframe, we assume success after a delay
         setTimeout(() => {
-            alert('Cadastro realizado com sucesso!');
+            alert('Formulário enviado! Verifique o quadro vermelho no final da página para confirmar se apareceu "Sua resposta foi registrada".');
             form.reset();
 
             // Reset conditionals
