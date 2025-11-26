@@ -106,11 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
             iframe.id = 'hidden_iframe';
             iframe.name = 'hidden_iframe';
             iframe.id = 'hidden_iframe';
-            // DEBUG: Make iframe visible to see errors
-            iframe.style.display = 'block';
-            iframe.style.width = '100%';
-            iframe.style.height = '500px';
-            iframe.style.border = '2px solid red';
+            // DEBUG: Iframe hidden for production
+            iframe.style.display = 'none';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = 'none';
             document.body.appendChild(iframe);
         }
 
@@ -302,7 +302,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Since we can't reliably detect load on cross-origin iframe, we assume success after a delay
         setTimeout(() => {
-            alert('Formulário enviado! Verifique o quadro vermelho no final da página para confirmar se apareceu "Sua resposta foi registrada".');
+            alert('Cadastro realizado com sucesso! Você será redirecionado para nossa comunidade no WhatsApp.');
+            // Redirect to WhatsApp Community
+            window.location.href = 'https://chat.whatsapp.com/HPNHqYTamYD5CONE0WgUt0';
             form.reset();
 
             // Reset conditionals
