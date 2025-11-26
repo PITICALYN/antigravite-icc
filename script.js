@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
         tempForm.action = GOOGLE_FORM_URL;
         tempForm.method = 'POST';
         tempForm.target = 'hidden_iframe';
+        tempForm.enctype = 'multipart/form-data';
         tempForm.style.display = 'none';
 
         const formData = new FormData(form);
